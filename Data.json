@@ -1,0 +1,265 @@
+{
+    "ohyeah": [
+        {
+            "name": "Budvar",
+            "img": "budvar.png",
+            "priceCZK": 59,
+            "priceEUR": 2.4,
+            "stock": 48
+        },
+        {
+            "name": "Malibu",
+            "img": "malibu.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Jack s colou",
+            "img": "jack.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Moscow Mule",
+            "img": "moscow.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Gin-Tonic",
+            "img": "gin.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Mojito",
+            "img": "mojito.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Prosecco",
+            "img": "prosecco.png",
+            "priceCZK": 390,
+            "priceEUR": 15.6,
+            "stock": 24
+        },
+        {
+            "name": "Pivo sud 30l",
+            "img": "keg30.png",
+            "priceCZK": 3125,
+            "priceEUR": 125,
+            "stock": 5
+        },
+        {
+            "name": "Pivo sud 50l",
+            "img": "keg50.png",
+            "priceCZK": 4375,
+            "priceEUR": 175,
+            "stock": 5
+        },
+        {
+            "name": "Plyn",
+            "img": "gas.png",
+            "priceCZK": 300,
+            "priceEUR": 12,
+            "stock": 10
+        },
+        {
+            "name": "Gril",
+            "img": "grill.png",
+            "priceCZK": 500,
+            "priceEUR": 20,
+            "stock": 3
+        }
+    ],
+    "pool": [
+        {
+            "name": "Budvar",
+            "img": "budvar.png",
+            "priceCZK": 59,
+            "priceEUR": 2.4,
+            "stock": 48
+        },
+        {
+            "name": "Malibu",
+            "img": "malibu.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Jack s colou",
+            "img": "jack.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Moscow Mule",
+            "img": "moscow.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Gin-Tonic",
+            "img": "gin.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Mojito",
+            "img": "mojito.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Coca-Cola",
+            "img": "cola.png",
+            "priceCZK": 32,
+            "priceEUR": 1.3,
+            "stock": 48
+        },
+        {
+            "name": "Sprite",
+            "img": "sprite.png",
+            "priceCZK": 32,
+            "priceEUR": 1.3,
+            "stock": 48
+        },
+        {
+            "name": "Red Bull",
+            "img": "redbull.png",
+            "priceCZK": 59,
+            "priceEUR": 2.4,
+            "stock": 48
+        },
+        {
+            "name": "Prosecco",
+            "img": "prosecco.png",
+            "priceCZK": 390,
+            "priceEUR": 15.6,
+            "stock": 24
+        },
+        {
+            "name": "Pivo sud 30l",
+            "img": "keg30.png",
+            "priceCZK": 3125,
+            "priceEUR": 125,
+            "stock": 5
+        },
+        {
+            "name": "Pivo sud 50l",
+            "img": "keg50.png",
+            "priceCZK": 4375,
+            "priceEUR": 175,
+            "stock": 5
+        },
+        {
+            "name": "Plyn",
+            "img": "gas.png",
+            "priceCZK": 300,
+            "priceEUR": 12,
+            "stock": 10
+        },
+        {
+            "name": "Gril",
+            "img": "grill.png",
+            "priceCZK": 500,
+            "priceEUR": 20,
+            "stock": 3
+        }
+    ],
+    "castle": [
+        {
+            "name": "Budvar",
+            "img": "budvar.png",
+            "priceCZK": 59,
+            "priceEUR": 2.4,
+            "stock": 48
+        },
+        {
+            "name": "Malibu",
+            "img": "malibu.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Jack s colou",
+            "img": "jack.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Moscow Mule",
+            "img": "moscow.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Gin-Tonic",
+            "img": "gin.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Mojito",
+            "img": "mojito.png",
+            "priceCZK": 99,
+            "priceEUR": 4,
+            "stock": 24
+        },
+        {
+            "name": "Prosecco",
+            "img": "prosecco.png",
+            "priceCZK": 390,
+            "priceEUR": 15.6,
+            "stock": 24
+        },
+        {
+            "name": "Pivo sud 30l",
+            "img": "keg30.png",
+            "priceCZK": 3125,
+            "priceEUR": 125,
+            "stock": 5
+        },
+        {
+            "name": "Pivo sud 50l",
+            "img": "keg50.png",
+            "priceCZK": 4375,
+            "priceEUR": 175,
+            "stock": 5
+        },
+        {
+            "name": "Plyn",
+            "img": "gas.png",
+            "priceCZK": 300,
+            "priceEUR": 12,
+            "stock": 10
+        },
+        {
+            "name": "Gril",
+            "img": "grill.png",
+            "priceCZK": 500,
+            "priceEUR": 20,
+            "stock": 3
+        }
+    ],
+    "settings": {
+        "exchangeRate": 25,
+        "cityTaxEUR": 2,
+        "discountPercent": 10
+    }
+}

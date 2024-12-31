@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mini Bar Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ... (předchozí CSS styly zůstávají stejné) ... */
+
+        .guest-info {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .guest-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .input-group input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff4e50;
+        }
+
+        .currency-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .currency-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .currency-btn.active {
+            background: #ff4e50;
+            color: white;
+            border-color: #ff4e50;
+        }
+
+        .wellness-input {
+            margin-top: 12px;
+        }
+
+        .summary-panel {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #ddd;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .discount-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0;
+            padding: 12px;
+            background: #fff3f3;
+            border-radius: 8px;
+        }
+
+        .discount-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mini Bar Management</h1>
+            <div class="villa-selection">
+                <button onclick="selectVilla('ohyeah')" class="active">OH YEAH vila</button>
+                <button onclick="selectVilla('pool')">Amazing Pool vila</button>
+                <button onclick="selectVilla('castle')">Little Castle vila</button>
+            </div>
+        </div>
+
+        <div class="guest-info">
+            <div class="guest-info-grid">
+                <div class="input-group">
+                    <label for="guests">Počet hostů</label>
+                    <input type="number" id="guests" min="1" value="1">
+                </div>
+                <div class="input-group">
+                    <label for="nights">Počet nocí</label>
+                    <input type="number" id="nights" min="1" value="1">
+                </div>
+            </div>
+            <div class="input-group wellness-input">
+                <label for="wellness">Wellness (€)</label>
+                <input type="number" id="wellness" min="0" value="0">
+            </div>
+        </div>
+
+        <div class="currency-toggle">
+            <button class="currency-btn active" onclick="setCurrency('CZK')">CZK</button>
+            <button class="currency-btn" onclick="setCurrency('EUR')">EUR</button>
+        </div>
+
+        <div class="grid" id="items"></div>
+
+        <div class="discount-toggle">
+            <input type="checkbox" id="discount" onchange="toggleDiscount()">
+            <label for="discount">Aplikovat 10% slevu (kromě City Tax)</label>
+        </div>
+
+        <div class="summary-panel">
+            <div class="summary-item">
+                <span>Mezisoučet:</span>
+                <span id="subtotal">0 CZK</span>
+            </div>
+            <div class="summary-item">
+                <span>City Tax:</span>
+                <span id="citytax">0 EUR</span>
+            </div>
+            <div class="summary-item" id="discount-row" style="display: none;">
+                <span>Sleva 10%:</span>
+                <span id="discount-amount">0 CZK</span>
+            </div>
+            <div class="summary-total">
+                <span>Celkem:</span>
+                <span id="total">0 CZK</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="quantity-popup" id="quantity-popup">
+        <div class="title" id="popup-title">Zadejte množství</div>
+        <div class="quantity-controls">
+            <button class="quantity-btn" onclick="adjustQuantity(-1)">-</button>
+            <input type="number" class="quantity-input" id="quantity-input" min="1" value="1">
+            <button class="quantity-btn" onclick="adjustQuantity(1)">+</button>
+        </div>
+        <button class="confirm-btn" onclick="confirmQuantity()">Potvrdit</antArtifact>
