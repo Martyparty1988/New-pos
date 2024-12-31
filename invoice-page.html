@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faktura - Mini Bar Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .invoice-title {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .invoice-details {
+            margin-bottom: 30px;
+        }
+
+        .invoice-details div {
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f8f8;
+            font-weight: bold;
+        }
+
+        .summary {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        @media print {
+            .actions {
+                display: none;
+            }
+            body {
+                padding: 0;
+                background: white;
+            }
+            .invoice-container {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <div class="invoice-title">Faktura</div>
+            <div id="invoice-number"></div>
+        </div>
+
+        <div class="invoice-details">
+            <div><strong>Vila:</strong> <span id="villa-name"></span></div>
+            <div><strong>Datum:</strong> <span id="invoice-date"></span></div>
+            <div><strong>Počet hostů:</strong> <span id="guest-count"></span></div>
+            <div><strong>Počet nocí:</strong> <span id="night-count"></span></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Položka</th>
+                    <th>Množství</th>
+                    <th>Cena/ks</th>
+                    <th>Celkem</th>
+                </tr>
+            </thead>
+            <tbody id="items-list"></tbody>
+        </table>
+
+        <div class="summary">
+            <div class="summary-item">
+                <span>Mezisoučet:</span>
+                <span id="subtotal"></span>
+            </div>
+            <div class="summary-item">
+                <span>City Tax:</span>
+                <span id="citytax"></span>
+            </div>
+            <div class="summary-item" id="discount-row">
+                <span>Sleva 10%:</span>
+                <span id="discount"></span>
+            </div>
+            <div class="summary-item total">
+                <span>Celkem:</span>
+                <span id="total"></span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-print"></i> Tisk
+            </button>
+            <button class="btn btn-primary" onclick="exportToPDF()">
+                <i class="fas fa-file-pdf"></i> Export PDF
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left"></i> Zpět
+            </button>
+            <button class="btn btn-primary" onclick="saveToHistory()">
+                <i class="fas fa-save"></i> Uložit do historie
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        let invoiceData;
+
+        function loadInvoiceData() {
+            const data = localStorage.getItem('invoice');
+            if (data) {
+                invoiceData = JSON.parse(data);
+                renderInvoice();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function renderInvoice() {
+            // Základní informace
+            document.getElementById('villa-name').textContent = getVillaName(invoiceData.villa);
+            document.getElementById('invoice-date').textContent = new Date(invoiceData.timestamp).toLocaleDateString('cs-CZ');
+            document.getElementById('guest-count').textContent = invoiceData.guests;
+            document.getElementById('night-count').textContent = invoiceData.nights;
+            document.getElementById('invoice-number').textContent = `#${generateInvoiceNumber()}`;
+
+            // Seznam položek
+            const itemsList = document.getElementById('items-list');
+            itemsList.innerHTML = '';
+
+            invoiceData.items.forEach(item => {
+                const row = document.createElement('tr');
+                const price = invoiceData.selectedCurrency === 'CZK' ? 
+                    `${item.priceCZK} Kč` : 
+                    `${item.priceEUR} €`;
+                const total = invoiceData.selectedCurrency === 'CZK' ?
+                    `${(item.priceCZK * item.quantity).toFixed(2)} Kč` :
+                    `${(item.priceEUR * item.quantity).toFixed(2)} €`;
+
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>${price}</td>
+                    <td>${total}</td>
+                `;
+                itemsList.appendChild(row);
+            });
+
+            // Wellness pokud existuje
+            if (invoiceData.wellness > 0) {
+                const row = document.createElement('tr');
+                const wellnessPrice = invoiceData.selectedCurrency === 'CZK' ?
+                    `${(invoiceData.wellness * invoiceData.totals.exchangeRate).toFixed(2)} Kč` :
+                    `${invoiceData.wellness.toFixed(2)} €`;
+                
+                row.innerHTML = `
+                    <td>Wellness</td>
+                    <td>1</td>
+                    <td>${wellnessPrice}</td>
+                    <td>${wellnessPrice}</td>
+                `;
+                itemsList.appendChild(row);
+            }
+
+            // Souhrn
+            document.getElementById('subtotal').textContent = invoiceData.selectedCurrency === 'CZK' ?
+                `${invoiceData.totals.subtotalCZK.toFixed(2)} Kč` :
+                `${invoiceData.totals.subtotalEUR.toFixed(2)} €`;
+
+            document.getElementById('citytax').textContent = `${invoiceData.totals.cityTaxEUR.toFixed(2)} €`;
+
+            if (invoiceData.discountApplied) {
+                document.getElementById('discount-row').style.display = 'flex';
+                document.getElementById('discount').textContent = invoiceData.selectedCurrency === 'CZK' ?
+                    `${invoiceData.totals.discountCZK.toFixed(2)} Kč` :
+                    `${invoiceData.totals.discountEUR.toFixed(2)} €`;
+            } else {
+                document.getElementById('discount-row').style.display = 'none';
+            }
+
+            document.getElementById('total').textContent = invoiceData.selectedCurrency === 'CZK' ?
+                `${invoiceData.totals.totalCZK.toFixed(2)} Kč` :
+                `${invoiceData.totals.totalEUR.toFixed(2)} €`;
+        }
+
+        function getVillaName(villa) {
+            const names = {
+                'ohyeah': 'OH YEAH vila',
+                'pool': 'Amazing Pool vila',
+                'castle': 'Little Castle vila'
+            };
+            return names[villa] || villa;
+        }
+
+        function generateInvoiceNumber() {
+            const date = new Date();
+            return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
+        }
+
+        function saveToHistory() {
+            let history = JSON.parse(localStorage.getItem('invoiceHistory') || '[]');
+            history.unshift({
+                ...invoiceData,
+                invoiceNumber: document.getElementById('invoice-number').textContent
+            });
+            localStorage.setItem('invoiceHistory', JSON.stringify(history));
+            alert('Faktura byla uložena do historie');
+        }
+
+        async function exportToPDF() {
+            const element = document.querySelector('.invoice-container');
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                logging: false
+            });
+            
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jspdf.jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`faktura-${document.getElementById('invoice-number').textContent}.pdf`);
+        }
+
+        window.onload = loadInvoiceData;
+    </script>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mini Bar Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .villa-selection {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .villa-selection button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .villa-selection button.active {
+            background: #ff4e50;
+            color: white;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .grid-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .grid-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+
+        .item-name {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ff4e50;
+        }
+
+        .stock {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .bubble {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4e50;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .bubble.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 100;
+        }
+
+        .quantity-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 320px;
+            display: none;
+            z-index: 101;
+        }
+
+        .title {
+            font-size: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+            color: #333;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: #f5f5f5;
+            color: #333;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #eee;
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #ff4e50;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .confirm-btn:hover {
+            background: #ff3a3d;
+        }
+
+        .guest-info {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .guest-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .input-group input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff4e50;
+        }
+
+        .currency-toggle {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .currency-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .currency-btn.active {
+            background: #ff4e50;
+            color: white;
+            border-color: #ff4e50;
+        }
+
+        .summary-panel {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #ddd;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .discount-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0;
+            padding: 12px;
+            background: #fff3f3;
+            border-radius: 8px;
+        }
+
+        .discount-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .primary-btn {
+            background: #ff4e50;
+            color: white;
+        }
+
+        .secondary-btn {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .grid-item img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mini Bar Management</h1>
+            <div class="villa-selection">
+                <button onclick="selectVilla('ohyeah')" class="active">OH YEAH vila</button>
+                <button onclick="selectVilla('pool')">Amazing Pool vila</button>
+                <button onclick="selectVilla('castle')">Little Castle vila</button>
+            </div>
+        </div>
+
+        <div class="guest-info">
+            <div class="guest-info-grid">
+                <div class="input-group">
+                    <label for="guests">Počet hostů</label>
+                    <input type="number" id="guests" min="1" value="1">
+                </div>
+                <div class="input-group">
+                    <label for="nights">Počet nocí</label>
+                    <input type="number" id="nights" min="1" value="1">
+                </div>
+            </div>
+            <div class="input-group wellness-input">
+                <label for="wellness">Wellness (€)</label>
+                <input type="number" id="wellness" min="0" value="0">
+            </div>
+        </div>
+
+        <div class="currency-toggle">
+            <button class="currency-btn active" onclick="setCurrency('CZK')">CZK</button>
+            <button class="currency-btn" onclick="setCurrency('EUR')">EUR</button>
+        </div>
+
+        <div class="grid" id="items"></div>
+
+        <div class="discount-toggle">
+            <input type="checkbox" id="discount" onchange="toggleDiscount()">
+            <label for="discount">Aplikovat 10% slevu (kromě City Tax)</label>
+        </div>
+
+        <div class="summary-panel">
+            <div class="summary-item">
+                <span>Mezisoučet:</span>
+                <span id="subtotal">0 CZK</span>
+            </div>
+            <div class="summary-item">
+                <span>City Tax:</span>
+                <span id="citytax">0 EUR</span>
+            </div>
+            <div class="summary-item" id="discount-row" style="display: none;">
+                <span>Sleva 10%:</span>
+                <span id="discount-amount">0 CZK</span>
+            </div>
+            <div class="summary-total">
+                <span>Celkem:</span>
+                <span id="total">0 CZK</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="action-btn primary-btn" onclick="generateInvoice()">
+                <i class="fas fa-file-invoice"></i>
+                Vytvořit fakturu
+            </button>
+            <button class="action-btn secondary-btn" onclick="window.location.href='historie.html'">
+                <i class="fas fa-history"></i>
+                Historie
+            </button>
+            <button class="action-btn secondary-btn" onclick="window.location.href='admin.html'">
+                <i class="fas fa-cog"></i>
+                Admin
+            </button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="quantity-popup" id="quantity-popup">
+        <div class="title" id="popup-title">Zadejte množství</div>
+        <div class="quantity-controls">
+            <button class="quantity-btn" onclick="adjustQuantity(-1)">-</button>
+            <input type="number" class="quantity-input" id="quantity-input" min="1" value="1">
+            <button class="quantity-btn" onclick="adjustQuantity(1)">+</button>
+        </div>
+        <button class="confirm-btn" onclick="confirmQuantity()">Potvrdit</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
