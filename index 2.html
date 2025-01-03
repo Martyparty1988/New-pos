@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>POS Systém</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React a ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel pro JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f5f5f5;
+        }
+
+        input[type="number"] {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Barevné schéma pro vily
+        const villaThemes = {
+            'OH YEAH': {
+                primary: 'from-pink-400 to-purple-500',
+                secondary: 'bg-pink-100',
+                accent: 'bg-pink-500',
+                text: 'text-pink-600',
+                border: 'border-pink-300',
+                shadow: 'shadow-pink-200',
+                name: 'OH YEAH vila'
+            },
+            'AMAZING POOL': {
+                primary: 'from-blue-400 to-cyan-500',
+                secondary: 'bg-blue-100',
+                accent: 'bg-blue-500',
+                text: 'text-blue-600',
+                border: 'border-blue-300',
+                shadow: 'shadow-blue-200',
+                name: 'Amazing pool vila'
+            },
+            'LITTLE CASTLE': {
+                primary: 'from-violet-400 to-indigo-500',
+                secondary: 'bg-violet-100',
+                accent: 'bg-violet-500',
+                text: 'text-violet-600',
+                border: 'border-violet-300',
+                shadow: 'shadow-violet-200',
+                name: 'Little castle vila'
+            }
+        };
+
+        const EUR_TO_CZK = 25;
+
+        const villas = {
+            'OH YEAH': { /* vila items */ },
+            'AMAZING POOL': { /* vila items */ },
+            'LITTLE CASTLE': { /* vila items */ }
+        };
+
+        function POSSystem() {
+            const [selectedVilla, setSelectedVilla] = React.useState('OH YEAH');
+            // další kód
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<POSSystem />);
+    </script>
+</body>
+</html>
